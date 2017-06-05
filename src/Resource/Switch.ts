@@ -40,7 +40,7 @@ interface ISwitchTerraform {
     server_ids?: string[];
 }
 
-export default class PacketFilter extends Base.BaseResource<ISwitchResource> implements Base.IResource {
+export default class Switch extends Base.BaseResource<ISwitchResource> implements Base.IResource {
     constructor() {
         super({
             type: 'sakuracloud_switch',
