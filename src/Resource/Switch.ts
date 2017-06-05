@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as Base from './Base';
 import * as Sacloud from '../Client';
+import Bridge from './Bridge';
 
 export interface ISwitchResource extends Base.IBaseResource {
     userSubnet: {
@@ -68,12 +69,17 @@ export default class Switch extends Base.BaseResource<ISwitchResource> implement
             const base = super.mapping(item);
 
             const sw: ISwitchTerraform = {
-                bridge_id: _.get<ISwitchResource, string>(item, 'bridge.id')
+                bridge_id: this.getBridgeID(item, resources.bridge)
             };
 
             dest[this.type][item.id] = Object.assign(base, sw);
 
             return dest;
         }, dest);
+    }
+
+    private getBridgeID(sw: ISwitchResource, bridge: Bridge): string {
+        const bridgeID = _.get<ISwitchResource, string>(sw, 'bridge.id');
+        return bridgeID && super.createReference(bridge.type, bridgeID) || '';
     }
 }
