@@ -6,6 +6,7 @@ import Server from './Resource/Server';
 import Disk from './Resource/Disk';
 import Switch from './Resource/Switch';
 import PacketFilter from './Resource/PacketFilter';
+import Bridge from './Resource/Bridge';
 
 export default class Terraform {
     readonly accessToken: string;
@@ -29,7 +30,8 @@ export default class Terraform {
             server      : new Server(),
             disk        : new Disk(),
             packetFilter: new PacketFilter(),
-            switch      : new Switch()
+            switch      : new Switch(),
+            bridge      : new Bridge()
         };
     }
 
