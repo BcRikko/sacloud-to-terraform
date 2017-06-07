@@ -1,12 +1,17 @@
 import * as Sacloud from './Client';
 import Utils from './utils';
 
+// Resource
 import * as Base from './Resource/Base';
 import Server from './Resource/Server';
 import Disk from './Resource/Disk';
 import Switch from './Resource/Switch';
 import PacketFilter from './Resource/PacketFilter';
 import Bridge from './Resource/Bridge';
+
+// DataSource
+import * as DataBase from './DataSource/Base';
+import Archive from './DataSource/Archive';
 
 export default class Terraform {
     readonly accessToken: string;
@@ -15,6 +20,7 @@ export default class Terraform {
     readonly client: Sacloud.Client;
 
     readonly resourceInstances: {[instance: string]: Base.IResource};
+    readonly datasourceInstances: {[instance: string]: DataBase.IData};
 
     constructor ({ accessToken, secretToken, defaultZone}) {
         this.accessToken = accessToken;
@@ -33,13 +39,22 @@ export default class Terraform {
             switch      : new Switch(),
             bridge      : new Bridge()
         };
+
+        this.datasourceInstances = {
+            archive: new Archive()
+        };
     }
 
     async load(): Promise<void[]> {
-        const requests = Object.keys(this.resourceInstances).map(r => {
+        const resourceRequests = Object.keys(this.resourceInstances).map(r => {
             return this.resourceInstances[r].load(this.client, this.defaultZone);
         });
 
+        const datasourceRequests = Object.keys(this.datasourceInstances).map(d => {
+            return this.datasourceInstances[d].load(this.client, this.defaultZone);
+        });
+
+        const requests = [...resourceRequests, ...datasourceRequests];
         return Promise.all(requests);
     }
 
@@ -52,7 +67,8 @@ export default class Terraform {
                     zone: this.defaultZone
                 }
             },
-            resource: []
+            resource: [],
+            data: []
         };
 
         const isEmpty = val => val === '' || val === null || val === undefined;
@@ -62,6 +78,14 @@ export default class Terraform {
                 isEmpty
             );
             tfJSON.resource.push(resource);
+        });
+
+        Object.keys(this.datasourceInstances).forEach(d => {
+            const datasource = Utils.removeObjectBy(
+                this.datasourceInstances[d].mapping(this.datasourceInstances),
+                isEmpty
+            );
+            tfJSON.data.push(datasource);
         });
 
         return tfJSON;

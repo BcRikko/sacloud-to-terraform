@@ -36,7 +36,7 @@ export class Client {
         const root = `https://secure.sakura.ad.jp/cloud/zone/${req.zone}/api/cloud/1.1/`
 
         return new Promise((resolve, reject) => {
-            request(method, root + req.path)
+            const r = request(method, root + req.path)
                 .auth(this.option.accessToken, this.option.accessTokenSecret)
                 .set({
                     'X-Sakura-HTTP-Method': method,
@@ -44,17 +44,23 @@ export class Client {
                     'X-Sakura-API-Request-Format': 'json',
                     'X-Sakura-API-Response-Format': 'json',
                     'X-Sakura-Error-Level': 'none'
-                })
-                .send(req.body)
-                .end((err, res) => {
-                    if (err) { reject(err); }
-
-                    if (this.option.disableLocalizeKeys) {
-                        resolve(res.body);
-                    } else {
-                        resolve(Utils.localizeKeys(res.body));
-                    }
                 });
+            
+            if (method === 'GET') {
+                r.query(JSON.stringify(req.body));
+            } else {
+                r.send(req.body);
+            }
+
+            r.end((err, res) => {
+                if (err) { reject(err); }
+
+                if (this.option.disableLocalizeKeys) {
+                    resolve(res.body);
+                } else {
+                    resolve(Utils.localizeKeys(res.body));
+                }
+            });
         });
     }
 }
