@@ -39,7 +39,7 @@ export class BaseResource<T> {
     readonly type: string;
     readonly path: string;
     readonly resField: string;
-    items: T[];
+    items: T[] = [];
 
     constructor(config: IBase) {
         this.type = config.type;

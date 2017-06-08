@@ -8,6 +8,7 @@ import Disk from './Resource/Disk';
 import Switch from './Resource/Switch';
 import PacketFilter from './Resource/PacketFilter';
 import Bridge from './Resource/Bridge';
+import SimpleMonitor from './Resource/SimpleMonitor';
 
 // DataSource
 import * as DataBase from './DataSource/Base';
@@ -33,11 +34,12 @@ export default class Terraform {
         });
 
         this.resourceInstances = {
-            server      : new Server(),
-            disk        : new Disk(),
-            packetFilter: new PacketFilter(),
-            switch      : new Switch(),
-            bridge      : new Bridge()
+            server       : new Server(),
+            disk         : new Disk(),
+            packetFilter : new PacketFilter(),
+            switch       : new Switch(),
+            bridge       : new Bridge(),
+            simpleMonitor: new SimpleMonitor()
         };
 
         this.datasourceInstances = {
