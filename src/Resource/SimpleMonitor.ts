@@ -95,8 +95,10 @@ export default class SimpleMonitor extends Base.BaseResource<ISimpleMonitorResou
         };
 
         return this.items.reduce((dest, item) => {
-            const base = super.baseMapping(item);
             const s = item.settings.simpleMonitor;
+            if (<string>s.healthCheck.protocol === 'payment') { return dest; }
+
+            const base = super.baseMapping(item);
             const simplemon: ISimpleMonitorTerraform = {
                 target: item.status.target,
                 health_check: {
@@ -105,7 +107,7 @@ export default class SimpleMonitor extends Base.BaseResource<ISimpleMonitorResou
                     path: s.healthCheck.path,
                     host_header: s.healthCheck.host,
                     status: s.healthCheck.status,
-                    port: parseInt(s.healthCheck.port, 10),
+                    port: s.healthCheck.port ? parseInt(s.healthCheck.port, 10) : null,
                     qname: s.healthCheck.qName,
                     expected_data: s.healthCheck.expectedData,
                     community: s.healthCheck.community,
@@ -118,6 +120,8 @@ export default class SimpleMonitor extends Base.BaseResource<ISimpleMonitorResou
                 notify_slack_webhook: s.notifySlack.incomingWebhooksURL,
                 enabled: s.enabled === 'True'
             };
+
+            delete base.name;
 
             dest[this.type][item.id] = Object.assign(base, simplemon);
 
