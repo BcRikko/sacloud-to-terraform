@@ -42,7 +42,7 @@ export default class Archive extends Base.BaseData<IArchiveData> implements Base
                 }
             }
         });
-        
+
         this.items = res.archives;
     }
 
@@ -61,8 +61,7 @@ export default class Archive extends Base.BaseData<IArchiveData> implements Base
                 ]
             };
 
-            const name = item.name.replace(/\s/g, '');
-            dest[this.type][name] = archive;
+            dest[this.type][item.id] = archive;
 
             return dest;
         }, dest);

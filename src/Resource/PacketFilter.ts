@@ -57,7 +57,7 @@ export default class PacketFilter extends Base.BaseResource<IPacketFilterResourc
         };
 
         return this.items.reduce((dest, item) => {
-            const base = super.mapping(item);
+            const base = super.baseMapping(item);
 
             const expressions = item.expression && item.expression.map(ex => {
                 return <IExpressionForTerraform>{

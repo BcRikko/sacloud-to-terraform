@@ -105,7 +105,7 @@ export default class Server extends Base.BaseResource<IServerResource> implement
             [this.type]: {}
         };
         return this.items.reduce((dest, item) => {
-            const base = super.mapping(item);
+            const base = super.baseMapping(item);
             const server: IServerForTerraform = {
                 disks: this.getDisks(item, resources.disk),
                 core: item.serverPlan.cpu,

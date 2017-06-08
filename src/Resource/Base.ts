@@ -31,7 +31,7 @@ export interface IBase {
 
 export interface IResource {
     load: (client: Sacloud.Client, zone: string) => Promise<void>;
-    mapping: (resources: any) => any;
+    mapping: (resources: any, datasource?: any) => any;
     
 }
 
@@ -47,7 +47,7 @@ export class BaseResource<T> {
         this.resField = config.resField;
     }
 
-    mapping(item: IBaseResource): IBaseForTerraform {
+    baseMapping(item: IBaseResource): IBaseForTerraform {
         return {
             // id         : parseInt(item.id),
             name       : item.name,
@@ -59,5 +59,9 @@ export class BaseResource<T> {
 
     createReference(referenceType: string, referenceId: string): string {
         return `\${${referenceType}.${referenceId}.id}`;
+    }
+
+    createDataReference(referenceType: string, referenceId: string): string {
+        return `\${data.${referenceType}.${referenceId}.id}`;
     }
 }

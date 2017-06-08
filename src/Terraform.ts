@@ -74,7 +74,7 @@ export default class Terraform {
         const isEmpty = val => val === '' || val === null || val === undefined;
         Object.keys(this.resourceInstances).forEach(r => {
             const resource = Utils.removeObjectBy(
-                this.resourceInstances[r].mapping(this.resourceInstances),
+                this.resourceInstances[r].mapping(this.resourceInstances, this.datasourceInstances),
                 isEmpty
             );
             tfJSON.resource.push(resource);

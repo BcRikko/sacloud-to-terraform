@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as Base from './Base';
 import * as Sacloud from '../Client';
+import Archive from '../DataSource/Archive';
 
 export interface IDiskResource extends Base.IBaseResource {
     connection: TConnection;
@@ -65,18 +66,18 @@ export default class Disk extends Base.BaseResource<IDiskResource> implements Ba
         this.items = res.disks;
     }
 
-    mapping(resources): any {
+    mapping(resources, datasources): any {
         const dest = {
             [this.type]: {}
         };
 
         return this.items.reduce((dest, item) => {
-            const base = super.mapping(item);
+            const base = super.baseMapping(item);
             const disk: IDiskForTerraform = {
                 plan               : item.plan.id === 2 ? 'ssd' : 'hdd',
                 connector          : item.connection,
                 size               : item.sizeMB,
-                source_archive_id  : _.get<IDiskResource, string>(item, 'sourceArchive.id'),
+                source_archive_id  : this.getSourceArchiveID(item, datasources.archive),
                 source_disk_id     : _.get<IDiskResource, string>(item, 'sourceDisk.id'),
                 hostname           : _.get<IDiskResource, string>(item, 'server.hostName')
             };
@@ -85,5 +86,12 @@ export default class Disk extends Base.BaseResource<IDiskResource> implements Ba
 
             return dest;
         }, dest);
+    }
+
+    private getSourceArchiveID(disk: IDiskResource, archive: Archive): string {
+        if (!disk) return '';
+        const publicArchive = archive.items.find(a => a.id === _.get<IDiskResource, string>(disk, 'sourceArchive.id'));
+
+        return publicArchive ? super.createDataReference(archive.type, publicArchive.id) : '';
     }
 }

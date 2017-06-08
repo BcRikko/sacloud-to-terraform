@@ -66,7 +66,7 @@ export default class Switch extends Base.BaseResource<ISwitchResource> implement
         };
 
         return this.items.reduce((dest, item) => {
-            const base = super.mapping(item);
+            const base = super.baseMapping(item);
 
             const sw: ISwitchTerraform = {
                 bridge_id: this.getBridgeID(item, resources.bridge)

@@ -37,7 +37,7 @@ export default class Bridge extends Base.BaseResource<IBridgeResource> implement
         };
 
         return this.items.reduce((dest, item) => {
-            const base = super.mapping(item);
+            const base = super.baseMapping(item);
             dest[this.type][item.id] = base;
 
             return dest;
