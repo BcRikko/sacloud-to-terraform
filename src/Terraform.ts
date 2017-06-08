@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import * as Sacloud from './Client';
 import Utils from './utils';
 
@@ -9,6 +10,7 @@ import Switch from './Resource/Switch';
 import PacketFilter from './Resource/PacketFilter';
 import Bridge from './Resource/Bridge';
 import SimpleMonitor from './Resource/SimpleMonitor';
+import Database from './Resource/Database';
 
 // DataSource
 import * as DataBase from './DataSource/Base';
@@ -39,6 +41,7 @@ export default class Terraform {
             packetFilter : new PacketFilter(),
             switch       : new Switch(),
             bridge       : new Bridge(),
+            database     : new Database(),
             simpleMonitor: new SimpleMonitor()
         };
 
@@ -75,19 +78,24 @@ export default class Terraform {
 
         const isEmpty = val => val === '' || val === null || val === undefined;
         Object.keys(this.resourceInstances).forEach(r => {
-            const resource = Utils.removeObjectBy(
-                this.resourceInstances[r].mapping(this.resourceInstances, this.datasourceInstances),
-                isEmpty
-            );
-            tfJSON.resource.push(resource);
+            if (this.resourceInstances[r]['items'].length > 0) {
+                const resource = Utils.removeObjectBy(
+                    this.resourceInstances[r].mapping(this.resourceInstances, this.datasourceInstances),
+                    isEmpty
+                );
+
+                tfJSON.resource.push(resource);
+            }
         });
 
         Object.keys(this.datasourceInstances).forEach(d => {
-            const datasource = Utils.removeObjectBy(
-                this.datasourceInstances[d].mapping(this.datasourceInstances),
-                isEmpty
-            );
-            tfJSON.data.push(datasource);
+            if (this.datasourceInstances[d]['items'].length > 0) {
+                const datasource = Utils.removeObjectBy(
+                    this.datasourceInstances[d].mapping(this.datasourceInstances),
+                    isEmpty
+                );
+                tfJSON.data.push(datasource);
+            }
         });
 
         return tfJSON;
