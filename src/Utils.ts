@@ -58,11 +58,11 @@ export default class Utils {
             for (let o in obj) {
                 if (Array.isArray(obj[o])) {
                     // Through
-                } else if (typeof obj[o] === 'object') {
-                    _remove(obj[o]);
-                
                 } else if (_cond(obj[o])) {
                     delete obj[o];
+
+                } else if (typeof obj[o] === 'object') {
+                    _remove(obj[o]);
                 }
             }
         }
