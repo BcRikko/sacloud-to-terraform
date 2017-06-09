@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as Sacloud from '../Client';
 
 export interface IBaseResource {
+    needsRemove: boolean;
     id: string;
     name: string;
     description: string;
@@ -57,8 +58,8 @@ export class BaseResource<T> {
         };
     }
 
-    createReference(referenceType: string, referenceId: string): string {
-        return `\${${referenceType}.${referenceId}.id}`;
+    createReference(referenceType: string, referenceId: string, referenceField: string = 'id'): string {
+        return `\${${referenceType}.${referenceId}.${referenceField}}`;
     }
 
     createDataReference(referenceType: string, referenceId: string): string {

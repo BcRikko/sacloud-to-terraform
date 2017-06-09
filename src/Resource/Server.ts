@@ -4,6 +4,8 @@ import * as Base from './Base';
 import Disk from './Disk';
 import PacketFilter from './PacketFilter';
 import Switch from './Switch';
+import { ISwitchResource } from './Switch';
+import Router from './Router';
 
 export interface IServerResource extends Base.IBaseResource {
     hostName: string;
@@ -111,7 +113,7 @@ export default class Server extends Base.BaseResource<IServerResource> implement
                 core: item.serverPlan.cpu,
                 memory: item.serverPlan.memoryMB,
                 packet_filter_ids: this.getPacketFilterIDs(item, resources.packetFilter),
-                nic: this.getNic(item, resources.switch),
+                nic: this.getNic(item, resources.switch, resources.router),
                 additional_nics: this.getAdditionalNics(item, resources.switch)
             };
 
@@ -146,12 +148,24 @@ export default class Server extends Base.BaseResource<IServerResource> implement
         }, []);
     }
 
-    private getNic(server: IServerResource, sw: Switch): string {
+    private getNic(server: IServerResource, sw: Switch, router: Router): string {
         switch (_.get<IServerResource, string>(server, 'interfaces[0].switch.scope')) {
             case 'shared':
                 return 'shared';
+
             case 'user':
-                return super.createReference(sw.type, server.interfaces[0].switch.id);
+                const connectedSw = sw.items.find(a => a.id === server.interfaces[0].switch.id);
+                const routerId = _.get<ISwitchResource, string>(connectedSw, 'internet.id');
+                if (routerId) {
+                    // ルータに付随するスイッチなので不要
+                    connectedSw.needsRemove = true;
+
+                    const r = router.items.find(a => a.id === routerId);
+                    return super.createReference(router.type, r.id, 'switch_id');
+                } else {
+                    return super.createReference(sw.type, server.interfaces[0].switch.id);
+                }
+
             default:
                 return '';
         }

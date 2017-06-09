@@ -28,7 +28,10 @@ export interface ISwitchResource extends Base.IBaseResource {
         }
     ];
     ipb6Nets: string[];
-    internet?: {};
+    internet?: {
+        id: string;
+        name: string;
+    };
     bridge?: {};
 }
 
@@ -66,6 +69,8 @@ export default class Switch extends Base.BaseResource<ISwitchResource> implement
         };
 
         return this.items.reduce((dest, item) => {
+            if (item.needsRemove) { return dest; }
+
             const base = super.baseMapping(item);
 
             const sw: ISwitchTerraform = {

@@ -80,7 +80,9 @@ export default class Terraform {
 
         const isEmpty = val => val === '' || val === null || val === undefined;
         Object.keys(this.resourceInstances).forEach(r => {
-            if (this.resourceInstances[r]['items'].length > 0) {
+            const items = this.resourceInstances[r]['items'] as Base.IBaseResource[];
+
+            if (items.length > 0 && items.some(a => !a.needsRemove)) {
                 const resource = Utils.removeObjectBy(
                     this.resourceInstances[r].mapping(this.resourceInstances, this.datasourceInstances),
                     isEmpty
