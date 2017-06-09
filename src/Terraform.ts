@@ -7,6 +7,7 @@ import * as Base from './Resource/Base';
 import Server from './Resource/Server';
 import Disk from './Resource/Disk';
 import Switch from './Resource/Switch';
+import Router from './Resource/Router';
 import PacketFilter from './Resource/PacketFilter';
 import Bridge from './Resource/Bridge';
 import SimpleMonitor from './Resource/SimpleMonitor';
@@ -40,6 +41,7 @@ export default class Terraform {
             disk         : new Disk(),
             packetFilter : new PacketFilter(),
             switch       : new Switch(),
+            router       : new Router(),
             bridge       : new Bridge(),
             database     : new Database(),
             simpleMonitor: new SimpleMonitor()
