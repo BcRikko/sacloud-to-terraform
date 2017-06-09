@@ -12,6 +12,7 @@ import PacketFilter from './Resource/PacketFilter';
 import Bridge from './Resource/Bridge';
 import SimpleMonitor from './Resource/SimpleMonitor';
 import Database from './Resource/Database';
+import SSHKey from './Resource/SSHKey';
 
 // DataSource
 import * as DataBase from './DataSource/Base';
@@ -44,7 +45,8 @@ export default class Terraform {
             router       : new Router(),
             bridge       : new Bridge(),
             database     : new Database(),
-            simpleMonitor: new SimpleMonitor()
+            simpleMonitor: new SimpleMonitor(),
+            sshKey       : new SSHKey()
         };
 
         this.datasourceInstances = {
