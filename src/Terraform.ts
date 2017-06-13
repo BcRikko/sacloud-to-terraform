@@ -10,9 +10,11 @@ import Switch from './Resource/Switch';
 import Router from './Resource/Router';
 import PacketFilter from './Resource/PacketFilter';
 import Bridge from './Resource/Bridge';
+import LoadBalancer from './Resource/LoadBalancer';
 import SimpleMonitor from './Resource/SimpleMonitor';
 import Database from './Resource/Database';
 import SSHKey from './Resource/SSHKey';
+import IPAddress from './Resource/IPAddress';
 
 // DataSource
 import * as DataBase from './DataSource/Base';
@@ -44,9 +46,11 @@ export default class Terraform {
             switch       : new Switch(),
             router       : new Router(),
             bridge       : new Bridge(),
+            loadBalancer : new LoadBalancer(),
             database     : new Database(),
             simpleMonitor: new SimpleMonitor(),
-            sshKey       : new SSHKey()
+            sshKey       : new SSHKey(),
+            ipAddress    : new IPAddress()
         };
 
         this.datasourceInstances = {
@@ -82,28 +86,21 @@ export default class Terraform {
 
         const isEmpty = val => val === '' || val === null || val === undefined;
         Object.keys(this.resourceInstances).forEach(r => {
+            if (this.resourceInstances[r]['isSkip']) { return; }
+
             const items = this.resourceInstances[r]['items'] as Base.IBaseResource[];
-
+            
             if (items.length > 0 && items.some(a => !a.needsRemove)) {
-                const resource = Utils.removeObjectBy(
-                    this.resourceInstances[r].mapping(this.resourceInstances, this.datasourceInstances),
-                    isEmpty
-                );
-
-                tfJSON.resource.push(resource);
+                tfJSON.resource.push(this.resourceInstances[r].mapping(this.resourceInstances, this.datasourceInstances));
             }
         });
 
         Object.keys(this.datasourceInstances).forEach(d => {
             if (this.datasourceInstances[d]['items'].length > 0) {
-                const datasource = Utils.removeObjectBy(
-                    this.datasourceInstances[d].mapping(this.datasourceInstances),
-                    isEmpty
-                );
-                tfJSON.data.push(datasource);
+                tfJSON.data.push(this.datasourceInstances[d].mapping(this.datasourceInstances));
             }
         });
 
-        return tfJSON;
+        return Utils.removeObjectBy(tfJSON, isEmpty);
     }
 }

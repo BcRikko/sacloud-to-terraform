@@ -57,7 +57,7 @@ export default class Utils {
         function _remove (obj: Object, cond?: (any) => boolean): void {
             for (let o in obj) {
                 if (Array.isArray(obj[o])) {
-                    // Through
+                    _remove(obj[o]);
                 } else if (_cond(obj[o])) {
                     delete obj[o];
 

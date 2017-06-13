@@ -28,6 +28,7 @@ export interface IBase {
     type: string;
     path: string;
     resField: string;
+    isSkip?: boolean;
 }
 
 export interface IResource {
@@ -40,12 +41,14 @@ export class BaseResource<T> {
     readonly type: string;
     readonly path: string;
     readonly resField: string;
+    readonly isSkip: boolean;
     items: T[] = [];
 
     constructor(config: IBase) {
         this.type = config.type;
         this.path = config.path;
         this.resField = config.resField;
+        this.isSkip = !!config.isSkip;
     }
 
     baseMapping(item: IBaseResource): IBaseForTerraform {
