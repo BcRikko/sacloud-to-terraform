@@ -51,7 +51,7 @@ interface IRouterForTerraform {
     ipv6_nw_address?: string;
 }
 
-export default class PacketFilter extends Base.BaseResource<IRouterResource> implements Base.IResource {
+export default class Router extends Base.BaseResource<IRouterResource> implements Base.IResource {
     constructor() {
         super({
             type: 'sakuracloud_internet',

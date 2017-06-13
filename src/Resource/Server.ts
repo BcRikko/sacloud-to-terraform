@@ -3,8 +3,7 @@ import * as Sacloud from '../Client';
 import * as Base from './Base';
 import Disk from './Disk';
 import PacketFilter from './PacketFilter';
-import Switch from './Switch';
-import { ISwitchResource } from './Switch';
+import Switch, { ISwitchResource } from './Switch';
 import Router from './Router';
 
 export interface IServerResource extends Base.IBaseResource {

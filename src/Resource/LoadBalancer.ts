@@ -2,8 +2,7 @@ import * as _ from 'lodash';
 import * as Base from './Base';
 import * as Sacloud from '../Client';
 import Server from './Server';
-import Switch from './Switch';
-import { ISwitchResource } from './Switch';
+import Switch, { ISwitchResource } from './Switch';
 import Router from './Router';
 import IPAddress from './IPAddress';
 
