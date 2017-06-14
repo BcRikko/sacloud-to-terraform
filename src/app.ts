@@ -13,7 +13,7 @@ process.on('unhandledRejection', console.dir);
 
 async function main() {
     const envs:IEnv[] = yaml.safeLoad(fs.readFileSync('env.yml', 'utf-8'));
-    const config = envs.find(a => a.account === process.env.ACCOUNT) || envs[0]
+    const config = envs.find(a => a.account === process.env.ACCOUNT) || envs.find(a => a.account === 'default') || envs[0];
 
     const tf = new Terraform({
         accessToken: config.accessToken,
