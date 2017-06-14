@@ -11,6 +11,7 @@ import Router from './Resource/Router';
 import PacketFilter from './Resource/PacketFilter';
 import Bridge from './Resource/Bridge';
 import LoadBalancer from './Resource/LoadBalancer';
+import VPCRouter from './Resource/VPCRouter';
 import SimpleMonitor from './Resource/SimpleMonitor';
 import Database from './Resource/Database';
 import SSHKey from './Resource/SSHKey';
@@ -47,6 +48,7 @@ export default class Terraform {
             router       : new Router(),
             bridge       : new Bridge(),
             loadBalancer : new LoadBalancer(),
+            vpcRouter    : new VPCRouter(),
             database     : new Database(),
             simpleMonitor: new SimpleMonitor(),
             sshKey       : new SSHKey(),
