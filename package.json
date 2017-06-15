@@ -6,7 +6,7 @@
   "scripts": {
     "build": "gulp build",
     "start": "node ./lib/app.js",
-    "test": "mocha -r ts-node/register test/**/*-test.ts"
+    "test": "json-server ./test/api.js & mocha -r ts-node/register test/**/*-test.ts"
   },
   "dependencies": {
     "@types/js-yaml": "^3.5.30",
@@ -27,6 +27,7 @@
     "gulp-sourcemaps": "^2.6.0",
     "gulp-tslint": "^8.1.0",
     "gulp-typescript": "^3.1.7",
+    "json-server": "^0.10.1",
     "ts-node": "^3.0.4",
     "tslint": "^5.3.2",
     "typescript": "^2.3.3"

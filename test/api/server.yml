@@ -1,0 +1,5 @@
+Servers:
+  - id: 1
+    title: 'a'
+  - id: 2
+    title: 'b'
