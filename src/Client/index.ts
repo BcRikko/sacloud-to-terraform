@@ -27,13 +27,11 @@ interface IRequest {
 }
 
 export class Client {
-    readonly API_ROOT = 'https://secure.sakura.ad.jp/cloud/api/cloud/1.1/';
-
     constructor(private option: IOption) {}
 
     send <T>(req: IRequest): Promise<T> {
         const method = req.method || 'GET' as TMethod;
-        const root = `https://secure.sakura.ad.jp/cloud/zone/${req.zone}/api/cloud/1.1/`
+        const root = this.option.apiRoot || `https://secure.sakura.ad.jp/cloud/zone/${req.zone}/api/cloud/1.1/`
 
         return new Promise((resolve, reject) => {
             const r = request(method, root + req.path)
